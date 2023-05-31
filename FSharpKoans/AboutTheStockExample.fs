@@ -60,6 +60,23 @@ module ``about the stock example`` =
 
     [<Koan>]
     let YouGotTheAnswerCorrect() =
-        let result =  __
+        let splitCommas (x:string) = x.Split([|','|])
+
+        let parseDouble s = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture)
+
+        // let pipePrint thing = printf "%A" thing; thing
+        // let pipePrintn thing = printfn "%A" thing; thing
+
+        let result = 
+            stockData
+            |> Seq.skip 1
+            |> Seq.map splitCommas
+            |> Seq.maxBy (fun fields ->
+                let openPrice = parseDouble fields[1]
+                let closePrice = parseDouble fields[4]
+                abs(openPrice - closePrice)
+            )
+            |> Seq.item 0
+
         
         AssertEquality "2012-03-13" result
